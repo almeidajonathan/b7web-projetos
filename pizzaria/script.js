@@ -1,5 +1,6 @@
 let modalQtd = 1;
 
+//Listagem das pizzas
 pizzaJson.map((item, index) => {
     //clonando estrutura e preenchendo com as informações de cada pizza
     let pizzaItem = document.querySelector('.models .pizza-item').cloneNode(true);
@@ -33,7 +34,7 @@ pizzaJson.map((item, index) => {
         document.querySelector('.pizzaBig img').src = pizzaJson[key].img;
         document.querySelector('.pizzaInfo h1').innerHTML = pizzaJson[key].name;
         document.querySelector('.pizzaInfo--desc').innerHTML = pizzaJson[key].description;
-        document.querySelector('.pizzaInfo--actualPrice').innerHTML += pizzaJson[key].price.toFixed(2).replace('.',',');
+        document.querySelector('.pizzaInfo--actualPrice').innerHTML =`R$ ${pizzaJson[key].price.toFixed(2).replace('.',',')}`;
         document.querySelectorAll('.pizzaInfo--size').forEach((size, indexSize) => {
             //adicionando os tamanhos das pizza de acordo com o json 
             size.querySelector('span').innerHTML = pizzaJson[key].sizes[indexSize];
@@ -46,3 +47,14 @@ pizzaJson.map((item, index) => {
     document.querySelector('.pizza-area').append( pizzaItem );
 });
 
+//Eventos do Modal 
+function closeModal() {
+    document.querySelector('.pizzaWindowArea').style.opacity = 0;
+    setTimeout(() => {
+        document.querySelector('.pizzaWindowArea').style.display = 'none';
+    }, 500)
+}
+
+document.querySelectorAll('.pizzaInfo--cancelButton, .pizzaInfo--cancelMobileButton').forEach((item) => {
+    item.addEventListener('click', closeModal);
+})
