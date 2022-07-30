@@ -1,4 +1,6 @@
+let cart = [];
 let modalQtd = 1;
+let modalKey;
 
 //Listagem das pizzas
 pizzaJson.map((item, index) => {
@@ -13,8 +15,10 @@ pizzaJson.map((item, index) => {
     //adicionando evento de click para abrir o modal
     pizzaItem.querySelector('a').addEventListener('click', (e) => {
         e.preventDefault();
+        
         //reset quantidade de pizza 
         modalQtd = 1;
+        document.querySelector('.pizzaInfo--qt').innerHTML = modalQtd;
         //removendo a seleção do tamanho escolhido anteriormente
         document.querySelector('.pizzaInfo--size.selected').classList.remove('selected');
         //adicionando a seleção ao tamanho grande
@@ -22,7 +26,9 @@ pizzaJson.map((item, index) => {
         
         //selecionando o atributo data-key para identificar a pizza
         let key = e.target.closest('.pizza-item').getAttribute('data-key');
-
+        
+        //atribuindo a key numa outra variavel para posteriormente usar no carrinho
+        modalKey = key;
         //criando uma animação ao abrir o modal
         document.querySelector('.pizzaWindowArea').style.opacity = 0; 
         document.querySelector('.pizzaWindowArea').style.display = 'flex';
@@ -77,4 +83,38 @@ document.querySelectorAll('.pizzaInfo--size').forEach((size, sizeIndex) => {
         document.querySelector('.pizzaInfo--size.selected').classList.remove('selected');
         size.classList.add('selected')
     })
-})
+});
+
+//adicionando ao carrinho
+document.querySelector('.pizzaInfo--addButton').addEventListener('click', () => {
+    //selecionando o tamanho da pizza
+    let size = parseInt(document.querySelector('.pizzaInfo--size.selected').getAttribute('data-key'));
+    
+    let code = pizzaJson[modalKey].id + '&' + size;
+    console.log(`code: ${code}`);
+
+    //verifica se já existe um item adicionado ao carrinho com o mesmo id   
+    let key = cart.findIndex((item) => item.code == code)
+    
+    if(key > -1) {
+        //aumenta a quantidade        
+        cart[key].qtd += modalQtd;
+
+    } else {
+        //adiciona um novo item
+         cart.push({
+            code,
+            id: pizzaJson[modalKey].id,
+            size: size,
+            qtd: modalQtd
+        });
+  
+    }
+    
+
+    
+    
+    
+
+    closeModal();
+});
