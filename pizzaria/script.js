@@ -89,7 +89,7 @@ document.querySelectorAll('.pizzaInfo--size').forEach((size, sizeIndex) => {
 document.querySelector('.pizzaInfo--addButton').addEventListener('click', () => {
     //selecionando o tamanho da pizza
     let size = parseInt(document.querySelector('.pizzaInfo--size.selected').getAttribute('data-key'));
-    
+    //criando um código (junção do id com o tamanho e um caracter)
     let code = pizzaJson[modalKey].id + '&' + size;
     console.log(`code: ${code}`);
 
@@ -110,11 +110,46 @@ document.querySelector('.pizzaInfo--addButton').addEventListener('click', () => 
         });
   
     }
-    
-
-    
-    
-    
-
+ 
     closeModal();
+    updateCart();
 });
+
+function updateCart() {
+    //exibir carrinho caso haja itens
+    let showCart = document.querySelector('aside');
+    document.querySelector('.cart').innerHTML = '';
+    if(cart.length > 0) {
+        showCart.classList.add('show');
+        for(let i in cart) {
+            let pizzaItem = pizzaJson.find((item) => item.id == cart[i].id)
+            //clonando area de informações de cada pizza
+            let cartItem = document.querySelector('.cart--item').cloneNode(true);
+            
+            let nameSize = (cart, index) => {
+                if(cart[i].size == 0) {
+                    return 'P';
+                } else if( cart[i].size == 1 ) {
+                    return 'M';
+                } else {
+                    return 'G';
+                }
+            }
+
+            //preenchendo informações da pizza
+            cartItem.querySelector('img').src = pizzaItem.img;
+        cartItem.querySelector('.cart--item-nome').innerHTML = `${pizzaItem.name} (${nameSize(cart, i)})` ;
+            cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qtd;
+
+            //preenchendo informações referente a compra
+            
+
+            //adicionando elemento
+            document.querySelector('.cart').append(cartItem);
+
+        }
+
+    } else {
+        showCart.classList.remove('show');
+    }
+}
