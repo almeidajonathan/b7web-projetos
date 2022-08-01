@@ -85,6 +85,16 @@ document.querySelectorAll('.pizzaInfo--size').forEach((size, sizeIndex) => {
     })
 });
 
+document.querySelector('.menu-openner').addEventListener('click', () => {
+    if(cart.length > 0) {
+        document.querySelector('aside').style.left = 0;
+    }
+});
+
+document.querySelector('.menu-closer').addEventListener('click', () => {
+    document.querySelector('aside').style.left = '100vw';
+});
+
 //adicionando ao carrinho
 document.querySelector('.pizzaInfo--addButton').addEventListener('click', () => {
     //selecionando o tamanho da pizza
@@ -115,7 +125,11 @@ document.querySelector('.pizzaInfo--addButton').addEventListener('click', () => 
     updateCart();
 });
 
+
+
 function updateCart() {
+    //atualizando a quantidade de item do carrinho para versão mobile
+    document.querySelector('.menu-openner span').innerHTML = cart.length;
     //exibir carrinho caso haja itens
     let showCart = document.querySelector('aside');
     document.querySelector('.cart').innerHTML = '';
@@ -174,5 +188,6 @@ function updateCart() {
 
     } else {
         showCart.classList.remove('show');
+        showCart.style.left = '100vw';
     }
 }
