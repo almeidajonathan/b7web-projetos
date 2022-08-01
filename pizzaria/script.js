@@ -121,6 +121,11 @@ function updateCart() {
     document.querySelector('.cart').innerHTML = '';
     if(cart.length > 0) {
         showCart.classList.add('show');
+
+        let subtotal = 0;
+        let desconto = 0;
+        let total = 0;
+
         for(let i in cart) {
             let pizzaItem = pizzaJson.find((item) => item.id == cart[i].id)
             //clonando area de informações de cada pizza
@@ -138,16 +143,34 @@ function updateCart() {
 
             //preenchendo informações da pizza
             cartItem.querySelector('img').src = pizzaItem.img;
-        cartItem.querySelector('.cart--item-nome').innerHTML = `${pizzaItem.name} (${nameSize(cart, i)})` ;
+            cartItem.querySelector('.cart--item-nome').innerHTML = `${pizzaItem.name} (${nameSize(cart, i)})` ;
             cartItem.querySelector('.cart--item--qt').innerHTML = cart[i].qtd;
+            cartItem.querySelector('.cart--item-qtmenos').addEventListener('click', () => {
+                if(cart[i].qtd > 1) {
+                    cart[i].qtd--;
+                } else {
+                    cart.splice(i, 1);
+                }
+                updateCart();
+            });
+            cartItem.querySelector('.cart--item-qtmais').addEventListener('click', () => {
+                cart[i].qtd++;
+                updateCart();
+            })
 
-            //preenchendo informações referente a compra
-            
+            //cálculo do subtotal por item 
+            subtotal += pizzaItem.price * cart[i].qtd;
 
             //adicionando elemento
             document.querySelector('.cart').append(cartItem);
 
         }
+        desconto = subtotal * 0.1;
+        total = subtotal - desconto;
+        //preenchendo informações referente a compra
+        document.querySelector('.cart--totalitem.subtotal').lastElementChild.innerHTML = `R$${subtotal.toFixed(2).replace('.',',')}`;
+        document.querySelector('.cart--totalitem.desconto').lastElementChild.innerHTML = `R$${desconto.toFixed(2).replace('.',',')}`;
+        document.querySelector('.cart--totalitem.total.big').lastElementChild.innerHTML = `R$${total.toFixed(2).replace('.',',')}`;
 
     } else {
         showCart.classList.remove('show');
